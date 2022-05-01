@@ -6,7 +6,7 @@ const createNewUser = async(req,res) =>{
   try {
     const token = await user.generateJWT()
     await user.save()
-    res.status(201).send(user, token)
+    res.status(201).send({user, token})
   } catch (error) {
     res.status(400).send(error)
   }
@@ -27,4 +27,28 @@ const loginUser = async(req,res)=>{
     res.status(400).send()
   }
 }
-module.exports = {createNewUser, loginUser}
+
+const logoutUser = async(req,res) =>{
+  try {
+    const user = req.user
+    const currentToken = req.token.trim()
+    user.tokens = req.usertokens.filter((token)=>{ return token.token.trim()!==currentToken})
+    await user.save()
+    res.send('Logued out succesfully')
+  } catch (error) {
+    res.status(400).send(error.message)
+  }
+  
+}
+
+const logoutAll = async(req,res)=>{
+  try {
+    const user = req.user
+    user.tokens = []
+    await user.save()
+    res.send('Logued out succesfully')
+  } catch (error) {
+    res.status(500).send(error.message)
+  }
+}
+module.exports = {createNewUser, loginUser, logoutUser,logoutAll}
