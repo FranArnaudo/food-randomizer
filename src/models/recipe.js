@@ -4,6 +4,7 @@ const recipeSchema = mongoose.Schema({
 	name: {
 		type: String,
 		required: true,
+    unique: true
 	},
   calification: {
     type: Number,
@@ -22,6 +23,18 @@ const recipeSchema = mongoose.Schema({
     }
   }]
 });
+
+recipeSchema.pre('save',async function(next){
+  const recipe = this
+  recipe.name = recipe.name.toLowerCase().replace(/  +/g, ' ')
+  if(recipe.isModified('name')){
+    const existingRecipe = await Recipe.findOne({name:recipe.name})
+    if(existingRecipe){
+      throw new Error('A recipe with that name already exists')
+    }
+  }
+  next()
+})
 
 const Recipe = mongoose.model('Recipe', recipeSchema)
 

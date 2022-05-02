@@ -30,4 +30,5 @@ const getAllIngredients = async(req,res)=>{
 
 
 
+
 module.exports = {addIngredient,getAllIngredients}
