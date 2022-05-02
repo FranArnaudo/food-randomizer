@@ -13,7 +13,7 @@ router.post('/users/logout',auth,logoutUser)
 
 router.post('/users/logoutAll',auth,logoutAll)
 
-router.get('/users/me',(req,res)=>{res.send("hola")})
+router.get('/users/me')
 
 router.patch('/users/me')
 
